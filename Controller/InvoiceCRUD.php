@@ -6,7 +6,6 @@ class InvoiceCRUD {
     public function __construct(DatabaseConnection $dbConnection) {
         $this->connection = $dbConnection->getConnection();
     }
-
     // Create a new invoice record
     public function create(Invoice $invoice) {
         $stmt = mysqli_prepare($this->connection, "INSERT INTO invoices (productId, amount, total, invoiceDate) VALUES (?, ?, ?, ?)");

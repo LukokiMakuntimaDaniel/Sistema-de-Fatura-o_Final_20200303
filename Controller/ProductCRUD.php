@@ -9,8 +9,8 @@ class ProductCRUD {
 
     // Create a new product record
     public function create(Product $product) {
-        $stmt = mysqli_prepare($this->connection, "INSERT INTO products (productName, description, price, amount, category, image) VALUES (?, ?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "ssdiiss", 
+        $stmt = mysqli_prepare($this->connection, "INSERT INTO products (productName, description, prince, amount, category, image) VALUES (?, ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "ssdiss", 
             $product->getProductName(),
             $product->getDescription(),
             $product->getPrice(),
@@ -18,7 +18,6 @@ class ProductCRUD {
             $product->getCategory(),
             $product->getImage()
         );
-
         if (mysqli_stmt_execute($stmt)) {
             $productId = mysqli_insert_id($this->connection);
             mysqli_stmt_close($stmt);

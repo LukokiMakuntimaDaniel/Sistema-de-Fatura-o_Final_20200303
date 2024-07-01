@@ -7,7 +7,6 @@ class UserCRUD {
         $this->connection = $dbConnection->getConnection();
     }
 
-    // Create a new user record
     public function create(User $user) {
         $stmt = mysqli_prepare($this->connection, "INSERT INTO users (userName, email, password, phoneNumber, userType, address) VALUES (?, ?, ?, ?, ?, ?)");
         mysqli_stmt_bind_param($stmt, "ssssss", 
