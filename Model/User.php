@@ -1,3 +1,4 @@
+<?php
 class User {
     private $userId;
     private $userName;
@@ -70,3 +71,4 @@ class User {
         $this->address = $address;
     }
 }
+?>

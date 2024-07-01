@@ -1,3 +1,4 @@
+<?php
 class Company {
     private $companyId;
     private $companyName;
@@ -60,3 +61,5 @@ class Company {
         $this->email = $email;
     }
 }
+
+?>

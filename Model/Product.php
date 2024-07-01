@@ -1,3 +1,4 @@
+<?php
 class Product {
     private $productId;
     private $productName;
@@ -70,3 +71,4 @@ class Product {
         $this->image = $image;
     }
 }
+?>

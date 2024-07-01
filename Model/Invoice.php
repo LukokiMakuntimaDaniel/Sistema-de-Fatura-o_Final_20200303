@@ -1,3 +1,4 @@
+<?php
 class Invoice {
     private $invoiceId;
     private $productId;
@@ -50,3 +51,4 @@ class Invoice {
         $this->invoiceDate = $invoiceDate;
     }
 }
+?>

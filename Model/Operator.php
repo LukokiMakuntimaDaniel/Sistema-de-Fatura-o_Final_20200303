@@ -1,4 +1,4 @@
-
+<?php
 class Operator {
     private $operatorId;
     private $userId;
@@ -21,3 +21,4 @@ class Operator {
         $this->userId = $userId;
     }
 }
+?>

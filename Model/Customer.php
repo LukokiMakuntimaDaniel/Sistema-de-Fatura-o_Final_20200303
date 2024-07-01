@@ -1,3 +1,4 @@
+<?php
 class Customer {
     private $customerId;
     private $address;
@@ -50,3 +51,4 @@ class Customer {
         $this->email = $email;
     }
 }
+?>
