@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['user'])) {
+if (!isset($_SESSION['user']) && $_SESSION['user']->getTypeUser) {
    header('Location:../Login.php');
 }// Faça algo diferente aqui, se necessário
 ?>

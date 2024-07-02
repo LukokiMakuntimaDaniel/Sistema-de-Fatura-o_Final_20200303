@@ -57,13 +57,13 @@ function fecharConta() {
                 })
                 .then(data => {
                     if (data.success) {
-                        console.log(`Requisição enviada com sucesso para o item ${index + 1}.`);
+                        //console.log(`Requisição enviada com sucesso para o item ${index + 1}.`);
                         listaProdutos[index].orderInvoice = requestBody.orderInvoice;
                         // produtosAtualizados = JSON.parse(localStorage.getItem('produtosAtualizados')) || [];
                         localStorage.setItem('produtosAtualizado', JSON.stringify(produtosAtualizado));
-                       // location.href = "../Views/Fatura.php"
+                        location.href = "../Views/Fatura.php"
 
-                        console.log("Lista de Produtos atualizada:", listaProdutos);
+                        //console.log("Lista de Produtos atualizada:", listaProdutos);
                         //alert("Fatura criada com sucesso!");
                     } else {
                         //console.error('Erro ao inserir fatura no banco de dados:', data.message);
@@ -76,7 +76,7 @@ function fecharConta() {
                 .catch(error => {
                     localStorage.setItem('produtosAtualizado', JSON.stringify(produtosAtualizado));
                     
-                   // location.href = "../Views/Fatura.php"
+                     location.href = "../Views/Fatura.php"
                     console.error('Erro ao enviar requisição:', error);
                     //alert("Erro ao enviar requisição: " + error.message);
                 });
