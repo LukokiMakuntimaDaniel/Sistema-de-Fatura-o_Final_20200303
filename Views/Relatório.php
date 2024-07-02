@@ -3,7 +3,7 @@ session_start();
 if (!isset($_SESSION['user'])) {
    header('Location:../Login.php');
 }// Faça algo diferente aqui, se necessário
-header('Location:../Login.php');
+
 ?>
 
 <!DOCTYPE html>
