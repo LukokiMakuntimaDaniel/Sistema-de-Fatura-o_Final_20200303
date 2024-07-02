@@ -1,7 +1,6 @@
 <?php
 class CompanyCRUD {
     private $connection;
-
     // Constructor to initialize database connection
     public function __construct(DatabaseConnection $dbConnection) {
         $this->connection = $dbConnection->getConnection();

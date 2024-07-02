@@ -1,19 +1,49 @@
 <?php
-class ProductCRUD {
+include("../Model/Product.php");
+class ProductCRUD
+{
     private $connection;
 
     // Constructor to initialize database connection
-    public function __construct(DatabaseConnection $dbConnection) {
+    public function __construct(DatabaseConnection $dbConnection)
+    {
         $this->connection = $dbConnection->getConnection();
     }
 
+
+    public function getAllProducts()
+    {
+        $products = [];
+        $query = "SELECT productId, productName, description, prince, amount, category, image FROM products";
+        $result = mysqli_query($this->connection, $query);
+
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $product = new Product($row['productName'], $row['description'], $row['prince'], $row['amount'], $row['category'], $row['image']);
+                $reflection = new ReflectionClass($product);
+                $property = $reflection->getProperty('productId');
+                $property->setAccessible(true);
+                $property->setValue($product, $row['productId']);
+
+                $products[] = $product;
+            }
+            mysqli_free_result($result);
+        }
+
+        return $products;
+    }
+
+
     // Create a new product record
-    public function create(Product $product) {
+    public function create(Product $product)
+    {
         $stmt = mysqli_prepare($this->connection, "INSERT INTO products (productName, description, prince, amount, category, image) VALUES (?, ?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "ssdiss", 
+        mysqli_stmt_bind_param(
+            $stmt,
+            "ssdiss",
             $product->getProductName(),
             $product->getDescription(),
-            $product->getPrice(),
+            $product->getPrince(),
             $product->getAmount(),
             $product->getCategory(),
             $product->getImage()
@@ -29,7 +59,8 @@ class ProductCRUD {
     }
 
     // Read a product record by ID
-    public function read($productId) {
+    public function read($productId)
+    {
         $stmt = mysqli_prepare($this->connection, "SELECT productId, productName, description, price, amount, category, image FROM products WHERE productId = ?");
         mysqli_stmt_bind_param($stmt, "i", $productId);
         mysqli_stmt_execute($stmt);
@@ -50,12 +81,15 @@ class ProductCRUD {
     }
 
     // Update a product record
-    public function update(Product $product) {
+    public function update(Product $product)
+    {
         $stmt = mysqli_prepare($this->connection, "UPDATE products SET productName = ?, description = ?, price = ?, amount = ?, category = ?, image = ? WHERE productId = ?");
-        mysqli_stmt_bind_param($stmt, "ssdiissi", 
+        mysqli_stmt_bind_param(
+            $stmt,
+            "ssdiissi",
             $product->getProductName(),
             $product->getDescription(),
-            $product->getPrice(),
+            $product->getPrince(),
             $product->getAmount(),
             $product->getCategory(),
             $product->getImage(),
@@ -68,7 +102,8 @@ class ProductCRUD {
     }
 
     // Delete a product record by ID
-    public function delete($productId) {
+    public function delete($productId)
+    {
         $stmt = mysqli_prepare($this->connection, "DELETE FROM products WHERE productId = ?");
         mysqli_stmt_bind_param($stmt, "i", $productId);
 
@@ -77,4 +112,3 @@ class ProductCRUD {
         return $result;
     }
 }
-?>

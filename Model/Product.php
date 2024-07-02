@@ -3,15 +3,15 @@ class Product {
     private $productId;
     private $productName;
     private $description;
-    private $price;
+    private $prince;
     private $amount;
     private $category;
     private $image;
 
-    public function __construct($productName, $description, $price, $amount, $category, $image) {
+    public function __construct($productName, $description, $prince, $amount, $category, $image) {
         $this->productName = $productName;
         $this->description = $description;
-        $this->price = $price;
+        $this->prince = $prince;
         $this->amount = $amount;
         $this->category = $category;
         $this->image = $image;
@@ -39,12 +39,12 @@ class Product {
         $this->description = $description;
     }
 
-    public function getPrice() {
-        return $this->price;
+    public function getprince() {
+        return $this->prince;
     }
 
-    public function setPrice($price) {
-        $this->price = $price;
+    public function setprince($prince) {
+        $this->prince = $prince;
     }
 
     public function getAmount() {
