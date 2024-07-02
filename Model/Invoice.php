@@ -1,12 +1,14 @@
 <?php
 class Invoice {
     private $invoiceId;
+    private $orderInvoice;
     private $productId;
     private $amount;
     private $total;
     private $invoiceDate;
 
-    public function __construct($productId, $amount, $total, $invoiceDate) {
+    public function __construct($orderInvoice, $productId, $amount, $total, $invoiceDate) {
+        $this->orderInvoice = $orderInvoice;
         $this->productId = $productId;
         $this->amount = $amount;
         $this->total = $total;
@@ -17,6 +19,14 @@ class Invoice {
 
     public function getInvoiceId() {
         return $this->invoiceId;
+    }
+
+    public function getOrderInvoice() {
+        return $this->orderInvoice;
+    }
+
+    public function setOrderInvoice($orderInvoice) {
+        $this->orderInvoice = $orderInvoice;
     }
 
     public function getProductId() {

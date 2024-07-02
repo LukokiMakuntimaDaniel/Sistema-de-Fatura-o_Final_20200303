@@ -1,7 +1,6 @@
 <?php
 include("../DataBase/DatabaseConnection.php");
 include("../Controller/ProductCRUD.php");
-include("../Model/Product.php");
 $conetionBd = new DatabaseConnection("localhost", "root", "", "SistemadeFatura");
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {

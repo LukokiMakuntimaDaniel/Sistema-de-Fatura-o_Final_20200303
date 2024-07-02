@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,23 +10,37 @@
     body {
       font-family: 'Arial', sans-serif;
     }
+
     .invoice-header {
       background-color: rgb(179, 178, 183);
       color: #fff;
       padding: 20px;
     }
+
     .invoice-body {
       padding: 20px;
     }
+
     .invoice-footer {
       background-color: rgb(179, 178, 183);
       padding: 20px;
     }
-    .table th, .table td {
+
+    .table th,
+    .table td {
       vertical-align: middle;
     }
   </style>
+  <?php
+  include("../DataBase/DatabaseConnection.php");
+  include("../Controller/CompanyCRUD.php");
+  $conetionBd = new DatabaseConnection("localhost", "root", "", "SistemadeFatura");
+  $companyCRUD = new CompanyCRUD($conetionBd);
+  $empresa = $companyCRUD->readSingleCompany();
+  ?>
+
 </head>
+
 <body>
   <div class="container my-5">
     <div class="card">
@@ -36,13 +51,19 @@
         <div class="row">
           <div class="col-md-6">
             <h4>De:</h4>
-            <p>
-              <strong>Nome da Empresa</strong><br>
-              Endereço da Empresa<br>
-              Cidade, Estado, CEP<br>
-              Telefone: (00) 0000-0000<br>
-              Email: empresa@example.com
-            </p>
+            <?php
+            if ($empresa) {
+              echo '<p>';
+              echo '<strong>' . htmlspecialchars($empresa->getCompanyName()) . '</strong><br>';
+              echo htmlspecialchars($empresa->getAddress()) . '<br>';
+              echo htmlspecialchars($empresa->getCity()) . ', ' . htmlspecialchars($empresa->getPhoneNumber()) . '<br>';
+              echo 'Telefone: ' . htmlspecialchars($empresa->getPhoneNumber()) . '<br>';
+              echo 'Email: ' . htmlspecialchars($empresa->getEmail());
+              echo '</p>';
+            } else {
+              echo '<p>Dados da empresa não encontrados.</p>';
+            }
+            ?>
           </div>
           <div class="col-md-6 text-right">
             <h4>Para:</h4>
@@ -65,41 +86,8 @@
           </div>
         </div>
 
-        <div class="table-responsive mt-4">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Descrição</th>
-                <th>Quantidade</th>
-                <th>Preço Unitário</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Produto A</td>
-                <td>2</td>
-                <td>R$ 100,00</td>
-                <td>R$ 200,00</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Produto B</td>
-                <td>3</td>
-                <td>R$ 150,00</td>
-                <td>R$ 450,00</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Serviço X</td>
-                <td>1</td>
-                <td>R$ 500,00</td>
-                <td>R$ 500,00</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="table-responsive mt-4" id="tabelaProdutos">
+          
         </div>
 
         <div class="row mt-4">
@@ -112,11 +100,11 @@
               <tbody>
                 <tr>
                   <th>Subtotal:</th>
-                  <td>R$ 1.150,00</td>
+                  <td>R$ 00</td>
                 </tr>
                 <tr>
                   <th>Imposto (10%):</th>
-                  <td>R$ 115,00</td>
+                  <td>R$ 14,00</td>
                 </tr>
                 <tr>
                   <th>Total:</th>
@@ -132,9 +120,13 @@
       </div>
     </div>
   </div>
-
+  <script src="../js/js.js"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    criarTabelaProdutos();
+  </script>
 </body>
+
 </html>

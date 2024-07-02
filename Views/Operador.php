@@ -7,9 +7,12 @@
   <?php
   include("../DataBase/DatabaseConnection.php");
   include("../Controller/ProductCRUD.php");
+  include("../Controller/InvoiceCRUD.php");
   $conetionBd = new DatabaseConnection("localhost", "root", "", "SistemadeFatura");
   $ProductCRUD = new ProductCRUD($conetionBd);
+  $InvoiceCRUD = new InvoiceCRUD($conetionBd);
   $produtos = $ProductCRUD->getAllProducts();
+  $countInvoices = $InvoiceCRUD->countInvoices();
   foreach ($produtos as $produto) {
     echo "<script>";
     echo "inserirProdutos(";
@@ -19,6 +22,7 @@
     echo "{$produto->getPrince()}, ";
     echo "{$produto->getAmount()}, ";
     echo "'{$produto->getCategory()}', ";
+    echo "'{$countInvoices}',";
     echo "'{$produto->getImage()}')";
     echo "</script>";
   }
@@ -78,7 +82,7 @@
                 <input type="number" class="form-control" id="qtd" placeholder="Digite o nome do produto" required>
               </div>
             </div>
-            <button id="addProductForm" class="btn btn-primary">Adicionar</button>
+            <button id="addProductForm" class="btn btn-primary" >Adicionar</button>
           </div>
         </div>
         <!-- Tabela de Produtos Adicionados -->
@@ -114,7 +118,7 @@
           </div>
           <div class="card-body">
             <h5>Total a Pagar: Kzs <span id="totalAmount">0.00</span></h5>
-            <button class="btn btn-success btn-block mt-3">Finalizar Compra</button>
+            <button class="btn btn-success btn-block mt-3" onclick="fecharConta()">Finalizar Compra</button>
             <button class="btn btn-danger btn-block mt-2">Cancelar Compra</button>
           </div>
         </div>
@@ -129,6 +133,7 @@
   <script>
     // Script para calcular o total por produto e o total geral
     document.getElementById('addProductForm').addEventListener('click', function() {
+      const quantity = document.getElementById("qtd").value
 
       const code = document.getElementById('productSelect').value;
       const productoSelecionado = listaProdutos.filter((elemento) => elemento.productId == code);
@@ -136,7 +141,8 @@
         if (produto.productId == code) {
           return {
             ...produto,
-            estado: 1
+            estado: 1,
+            qtdComprada: quantity
           }
         }
         return produto; // Retorna o produto sem alteração se não atender à condição
@@ -145,9 +151,7 @@
       const codes = productoSelecionado[0].productId;
       const name = productoSelecionado[0].productName;
       const price = productoSelecionado[0].prince;
-      const quantity = document.getElementById("qtd").value
       const total = parseFloat(quantity) * parseInt(price);
-
       const productList = document.getElementById('productList');
       const newRow = productList.insertRow();
 

@@ -7,13 +7,13 @@ class DashboardData {
     }
 
     public function getTotalInvoices() {
-        $result = mysqli_query($this->connection, "SELECT COUNT(*) AS total FROM invoices WHERE MONTH(invoceDate) = MONTH(CURDATE())");
+        $result = mysqli_query($this->connection, "SELECT COUNT(*) AS total FROM invoices WHERE MONTH(invoiceDate) = MONTH(CURDATE())");
         $data = mysqli_fetch_assoc($result);
         return $data['total'];
     }
 
     public function getTotalRevenue() {
-        $result = mysqli_query($this->connection, "SELECT SUM(total) AS revenue FROM invoices WHERE MONTH(invoceDate) = MONTH(CURDATE())");
+        $result = mysqli_query($this->connection, "SELECT SUM(total) AS revenue FROM invoices WHERE MONTH(invoiceDate) = MONTH(CURDATE())");
         $data = mysqli_fetch_assoc($result);
         return $data['revenue'];
     }
@@ -25,7 +25,7 @@ class DashboardData {
     }
 
     public function getTotalProductsSold() {
-        $result = mysqli_query($this->connection, "SELECT SUM(amount) AS total FROM invoices WHERE MONTH(invoceDate) = MONTH(CURDATE())");
+        $result = mysqli_query($this->connection, "SELECT SUM(amount) AS total FROM invoices WHERE MONTH(invoiceDate) = MONTH(CURDATE())");
         $data = mysqli_fetch_assoc($result);
         return $data['total'];
     }
