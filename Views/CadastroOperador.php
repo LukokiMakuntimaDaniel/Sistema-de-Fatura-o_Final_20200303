@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['user']) && $_SESSION['user']->getTypeUser) {
-   header('Location:../Login.php');
+if (!isset($_SESSION['user'])) {
+   header('Location:../index.php');
 }// Faça algo diferente aqui, se necessário
 ?>
 <!DOCTYPE html>

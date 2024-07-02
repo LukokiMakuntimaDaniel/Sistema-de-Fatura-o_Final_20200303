@@ -25,7 +25,7 @@ class DashboardData {
     }
 
     public function getTotalProductsSold() {
-        $result = mysqli_query($this->connection, "SELECT SUM(amount) AS total FROM invoices WHERE MONTH(invoiceDate) = MONTH(CURDATE())");
+        $result = mysqli_query($this->connection, "SELECT count(invoiceId) AS total FROM invoices WHERE MONTH(invoiceDate) = MONTH(CURDATE())");
         $data = mysqli_fetch_assoc($result);
         return $data['total'];
     }

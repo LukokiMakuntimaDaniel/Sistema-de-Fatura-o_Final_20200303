@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user'])) {
-   header('Location:../Login.php');
+   header('Location:../index.php');
 }// Faça algo diferente aqui, se necessário
 ?>
 
@@ -41,7 +41,7 @@ if (!isset($_SESSION['user'])) {
           <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="Home.html">Home</a>
+          <a class="nav-link" href="./Home.php">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="Fatura.html">Faturas</a>
@@ -50,13 +50,13 @@ if (!isset($_SESSION['user'])) {
           <a class="nav-link" href="CadastroCliente.html">Clientes</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="CadastroProduto.html"> Cadastrar Produtos</a>
+          <a class="nav-link" href="./CadastroProduto.php"> Cadastrar Produtos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="CadastroOperador.html">Cadastrar Operador</a>
+          <a class="nav-link" href="./CadastroOperador.php">Cadastrar Operador</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="Relatório.html">Relatórios</a>
+          <a class="nav-link" href="./Relatório.php">Relatórios</a>
         </li>
 
       </ul>

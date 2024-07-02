@@ -1,12 +1,3 @@
-<?php
-session_start();
-
-if (!isset($_SESSION['user'])) {
-   header('../');
-}// Faça algo diferente aqui, se necessário
-
-?>
-
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -58,7 +49,7 @@ if (!isset($_SESSION['user'])) {
 
     if ($user) {
       $_SESSION['user'] = $user;
-      if ($user->getUserType() == 1) {
+      if ($user->getUserType() === 'admin') {
         header("Location: ./Views/Admin.php"); // Redireciona para o dashboard do administrador
       } elseif ($user->getUserType() == 2) {
         header("Location: ./Views/Operador.php"); // Redireciona para o dashboard do usuário
