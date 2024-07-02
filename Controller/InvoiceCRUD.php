@@ -22,7 +22,7 @@ class InvoiceCRUD
 
         mysqli_stmt_bind_param(
             $stmt,
-            "siifs",
+            "siiis",
             $invoice->getOrderInvoice(),
             $invoice->getProductId(),
             $invoice->getAmount(),

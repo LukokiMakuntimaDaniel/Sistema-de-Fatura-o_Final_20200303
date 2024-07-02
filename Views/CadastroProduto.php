@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['user'])) {
+   header('../Login.php');
+}// Faça algo diferente aqui, se necessário
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 

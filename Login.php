@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user'])) {
+   header('../');
+}// Faça algo diferente aqui, se necessário
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 

@@ -1,3 +1,9 @@
+<?php
+session_start();
+if (!isset($_SESSION['user'])) {
+   header('Location:../Login.php');
+}// Faça algo diferente aqui, se necessário
+?>
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -195,6 +201,8 @@
             </div>
           </div>
         </div>
+
+
       </main>
     </div>
   </div>
@@ -204,66 +212,80 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // Exemplo de dados fictícios para os gráficos
-    const ctx1 = document.getElementById('revenueChart').getContext('2d');
-    const revenueChart = new Chart(ctx1, {
-      type: 'line',
-      data: {
-        labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
-        datasets: [{
-          label: 'Receita',
-          data: [10000, 15000, 20000, 25000, 30000, 35000],
-          backgroundColor: 'rgba(0, 123, 255, 0.5)',
-          borderColor: 'rgba(0, 123, 255, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
+    // Função para buscar os dados do servidor e atualizar os gráficos
+    function atualizarGraficos() {
+      // AJAX para buscar os dados de receita por mês
+      fetch('../Actions/getChartData.php')
+        .then(response => response.json())
+        .then(data => {
+          const ctx1 = document.getElementById('revenueChart').getContext('2d');
+          const revenueChart = new Chart(ctx1, {
+            type: 'line',
+            data: {
+              labels: data.receitaPorMes.map(item => item.mes), // Labels dos meses
+              datasets: [{
+                label: 'Receita',
+                data: data.receitaPorMes.map(item => item.receita), // Dados de receita por mês
+                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                borderColor: 'rgba(0, 123, 255, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }]
+              }
             }
-          }]
-        }
-      }
-    });
+          });
 
-    const ctx2 = document.getElementById('topProductsChart').getContext('2d');
-    const topProductsChart = new Chart(ctx2, {
-      type: 'bar',
-      data: {
-        labels: ['Produto A', 'Produto B', 'Produto C', 'Produto D', 'Produto E'],
-        datasets: [{
-          label: 'Vendas',
-          data: [50, 75, 100, 125, 150],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.5)',
-            'rgba(54, 162, 235, 0.5)',
-            'rgba(255, 206, 86, 0.5)',
-            'rgba(75, 192, 192, 0.5)',
-            'rgba(153, 102, 255, 0.5)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)'
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
+          const ctx2 = document.getElementById('topProductsChart').getContext('2d');
+          const topProductsChart = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+              labels: data.produtosMaisVendidos.map(item => item.productName), // Labels dos produtos
+              datasets: [{
+                label: 'Vendas',
+                data: data.produtosMaisVendidos.map(item => item.vendas), // Dados de vendas dos produtos
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.5)',
+                  'rgba(54, 162, 235, 0.5)',
+                  'rgba(255, 206, 86, 0.5)',
+                  'rgba(75, 192, 192, 0.5)',
+                  'rgba(153, 102, 255, 0.5)'
+                ],
+                borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }]
+              }
             }
-          }]
-        }
-      }
-    });
+          });
+        })
+        .catch(error => {
+          console.error('Erro ao buscar dados do servidor:', error);
+          alert('Erro ao buscar dados do servidor. Verifique o console para mais detalhes.');
+        });
+    }
+
+    // Chama a função para atualizar os gráficos ao carregar a página
+    atualizarGraficos()
   </script>
 </body>
 

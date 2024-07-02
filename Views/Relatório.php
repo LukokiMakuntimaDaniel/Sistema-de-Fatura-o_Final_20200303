@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION['user'])) {
+   header('Location:../Login.php');
+}// Faça algo diferente aqui, se necessário
+header('Location:../Login.php');
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -146,69 +154,100 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  
-  
-  <script>
-    // Dados fictícios para os gráficos
-    const ctx1 = document.getElementById('revenueChart').getContext('2d');
-    const revenueChart = new Chart(ctx1, {
-      type: 'line',
-      data: {
-        labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
-        datasets: [{
-          label: 'Receita',
-          data: [10000, 15000, 20000, 25000, 30000, 35000],
-          backgroundColor: 'rgba(0, 123, 255, 0.5)',
-          borderColor: 'rgba(0, 123, 255, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
-    });
 
-    const ctx2 = document.getElementById('topProductsChart').getContext('2d');
-    const topProductsChart = new Chart(ctx2, {
-      type: 'bar',
-      data: {
-        labels: ['Produto A', 'Produto B', 'Produto C', 'Produto D', 'Produto E'],
-        datasets: [{
-          label: 'Vendas',
-          data: [50, 75, 100, 125, 150],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.5)',
-            'rgba(54, 162, 235, 0.5)',
-            'rgba(255, 206, 86, 0.5)',
-            'rgba(75, 192, 192, 0.5)',
-            'rgba(153, 102, 255, 0.5)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)'
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
+
+
+  <script>
+    // Função para buscar dados dos gráficos
+    async function fetchChartData() {
+      try {
+        const response = await fetch('../Actions/getChartData.php');
+        const data = await response.json();
+
+        // Dados para o gráfico de receita por mês
+        const receitaPorMes = data.receitaPorMes.map(item => ({
+          mes: item.mes,
+          receita: item.receita
+        }));
+
+        // Dados para o gráfico de produtos mais vendidos
+        const produtosMaisVendidos = data.produtosMaisVendidos.map(item => ({
+          productName: item.productName,
+          vendas: item.vendas
+        }));
+
+        // Atualizar gráficos
+        atualizarGraficos(receitaPorMes, produtosMaisVendidos);
+      } catch (error) {
+        console.error('Erro ao buscar dados dos gráficos:', error);
       }
-    });
+    }
+
+    // Função para atualizar os gráficos
+    function atualizarGraficos(receitaPorMes, produtosMaisVendidos) {
+      const ctx1 = document.getElementById('revenueChart').getContext('2d');
+      const revenueChart = new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: receitaPorMes.map(item => `Mês ${item.mes}`),
+          datasets: [{
+            label: 'Receita',
+            data: receitaPorMes.map(item => item.receita),
+            backgroundColor: 'rgba(0, 123, 255, 0.5)',
+            borderColor: 'rgba(0, 123, 255, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+
+      const ctx2 = document.getElementById('topProductsChart').getContext('2d');
+      const topProductsChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: produtosMaisVendidos.map(item => item.productName),
+          datasets: [{
+            label: 'Vendas',
+            data: produtosMaisVendidos.map(item => item.vendas),
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.5)',
+              'rgba(255, 206, 86, 0.5)',
+              'rgba(75, 192, 192, 0.5)',
+              'rgba(153, 102, 255, 0.5)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+    }
+
+    // Buscar dados e atualizar gráficos ao carregar a página
+    fetchChartData();
   </script>
 
 
