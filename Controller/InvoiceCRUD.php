@@ -1,15 +1,21 @@
 <?php
-class InvoiceCRUD {
+include("../Model/Invoice.php");
+class InvoiceCRUD
+{
     private $connection;
 
     // Constructor to initialize database connection
-    public function __construct(DatabaseConnection $dbConnection) {
+    public function __construct(DatabaseConnection $dbConnection)
+    {
         $this->connection = $dbConnection->getConnection();
     }
     // Create a new invoice record
-    public function create(Invoice $invoice) {
+    public function create(Invoice $invoice)
+    {
         $stmt = mysqli_prepare($this->connection, "INSERT INTO invoices (productId, amount, total, invoiceDate) VALUES (?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "idss", 
+        mysqli_stmt_bind_param(
+            $stmt,
+            "idss",
             $invoice->getProductId(),
             $invoice->getAmount(),
             $invoice->getTotal(),
@@ -26,8 +32,28 @@ class InvoiceCRUD {
         }
     }
 
+    public function getAllInvoices()
+    {
+        $stmt = mysqli_prepare($this->connection, "SELECT invoiceId, productId, amount, total, invoceDate FROM invoices");
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        $invoices = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $invoice = new Invoice($row['productId'], $row['amount'], $row['total'], $row['invoceDate']);
+            $reflection = new ReflectionClass($invoice);
+            $property = $reflection->getProperty('invoiceId');
+            $property->setAccessible(true);
+            $property->setValue($invoice, $row['invoiceId']);
+            $invoices[] = $invoice;
+        }
+        mysqli_stmt_close($stmt);
+        return $invoices;
+    }
+
     // Read an invoice record by ID
-    public function read($invoiceId) {
+    public function read($invoiceId)
+    {
         $stmt = mysqli_prepare($this->connection, "SELECT invoiceId, productId, amount, total, invoiceDate FROM invoices WHERE invoiceId = ?");
         mysqli_stmt_bind_param($stmt, "i", $invoiceId);
         mysqli_stmt_execute($stmt);
@@ -48,9 +74,12 @@ class InvoiceCRUD {
     }
 
     // Update an invoice record
-    public function update(Invoice $invoice) {
+    public function update(Invoice $invoice)
+    {
         $stmt = mysqli_prepare($this->connection, "UPDATE invoices SET productId = ?, amount = ?, total = ?, invoiceDate = ? WHERE invoiceId = ?");
-        mysqli_stmt_bind_param($stmt, "idssi", 
+        mysqli_stmt_bind_param(
+            $stmt,
+            "idssi",
             $invoice->getProductId(),
             $invoice->getAmount(),
             $invoice->getTotal(),
@@ -64,7 +93,8 @@ class InvoiceCRUD {
     }
 
     // Delete an invoice record by ID
-    public function delete($invoiceId) {
+    public function delete($invoiceId)
+    {
         $stmt = mysqli_prepare($this->connection, "DELETE FROM invoices WHERE invoiceId = ?");
         mysqli_stmt_bind_param($stmt, "i", $invoiceId);
 
@@ -73,4 +103,3 @@ class InvoiceCRUD {
         return $result;
     }
 }
-?>

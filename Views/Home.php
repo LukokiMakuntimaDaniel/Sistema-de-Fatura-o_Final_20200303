@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,23 +11,42 @@
     body {
       font-family: 'Arial', sans-serif;
     }
+
     #sidebar {
       height: 100vh;
       background-color: #136dc6;
       padding: 20px;
     }
+
     #sidebar .nav-link {
       color: #fff;
     }
+
     #sidebar .nav-link.active {
       background-color: #0a78ee;
       color: #fff;
     }
+
     #content {
       padding: 20px;
     }
   </style>
+  <?php
+  include("../DataBase/DatabaseConnection.php");
+  include("../Controller/DashboardData.php");
+  include("../Controller/InvoiceCRUD.php");
+  $conetionBd = new DatabaseConnection("localhost", "root", "", "SistemadeFatura");
+  $dashboardData = new DashboardData($conetionBd);
+  $totalInvoices = $dashboardData->getTotalInvoices();
+  $totalRevenue = $dashboardData->getTotalRevenue() ?? 0;
+  $totalCustomers = $dashboardData->getTotalCustomers();
+  $totalProductsSold = $dashboardData->getTotalProductsSold() ?? 0;
+  $invoiceCRUD = new InvoiceCRUD($conetionBd);
+  $invoices = $invoiceCRUD->getAllInvoices();
+  ?>
+
 </head>
+
 <body>
   <div class="container-fluid">
     <div class="row">
@@ -41,22 +61,22 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="Fatura.html">
+              <a class="nav-link" href="./Fatura.php">
                 <i class="fas fa-file-invoice"></i> Faturas
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="CadastroCliente.html">
-                <i class="fas fa-users"></i> Clientes
+              <a class="nav-link" href="./Empresa.php">
+                <i class="fas fa-users"></i> Empresas
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="CadastroProduto.html">
+              <a class="nav-link" href="./CadastroProduto.php">
                 <i class="fas fa-boxes"></i> Produtos
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="Relatório.html">
+              <a class="nav-link" href="./Relatório.php">
                 <i class="fas fa-chart-bar"></i> Relatórios
               </a>
             </li>
@@ -81,7 +101,7 @@
             <div class="card text-white bg-primary mb-3">
               <div class="card-header">Faturas Emitidas</div>
               <div class="card-body">
-                <h5 class="card-title">150</h5>
+                <h5 class="card-title"><?php echo $totalInvoices; ?></h5>
                 <p class="card-text">Total de faturas emitidas este mês.</p>
               </div>
             </div>
@@ -90,7 +110,7 @@
             <div class="card text-white bg-success mb-3">
               <div class="card-header">Receita</div>
               <div class="card-body">
-                <h5 class="card-title">Kzs 50.000,00</h5>
+                <h5 class="card-title">KZS <?php echo number_format($totalRevenue, 2, ',', '.'); ?></h5>
                 <p class="card-text">Receita total deste mês.</p>
               </div>
             </div>
@@ -99,7 +119,7 @@
             <div class="card text-white bg-warning mb-3">
               <div class="card-header">Clientes</div>
               <div class="card-body">
-                <h5 class="card-title">75</h5>
+                <h5 class="card-title"><?php echo $totalCustomers; ?></h5>
                 <p class="card-text">Novos clientes este mês.</p>
               </div>
             </div>
@@ -108,7 +128,7 @@
             <div class="card text-white bg-danger mb-3">
               <div class="card-header">Produtos Vendidos</div>
               <div class="card-body">
-                <h5 class="card-title">300</h5>
+                <h5 class="card-title"><?php echo $totalProductsSold; ?></h5>
                 <p class="card-text">Total de produtos vendidos este mês.</p>
               </div>
             </div>
@@ -135,19 +155,21 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>2024-06-18</td>
-                      <td>Suzete Canda</td>
-                      <td>kzs 1.000,00</td>
-                      <td><span class="badge badge-success">Pago</span></td>
-                      <td>
-                        <button class="btn btn-primary btn-sm">Ver</button>
-                        <button class="btn btn-warning btn-sm">Editar</button>
-                        <button class="btn btn-danger btn-sm">Excluir</button>
-                      </td>
-                    </tr>
-                    <!-- Adicione mais linhas conforme necessário -->
+                    <?php foreach ($invoices as $invoice) : ?>
+                      <tr>
+                        <td><?php echo $invoice->getInvoiceId(); ?></td>
+                        <td><?php echo $invoice->getInvoiceDate(); ?></td>
+                        <td><?php echo "Cliente Exemplo"; // Substitua por lógica para obter o nome do cliente 
+                            ?></td>
+                        <td><?php echo number_format($invoice->getTotal(), 2, ',', '.'); ?></td>
+                        <td><span class="badge badge-success">Pago</span></td> <!-- Substitua por lógica de status real -->
+                        <td>
+                          <button class="btn btn-primary btn-sm">Ver</button>
+                          <button class="btn btn-warning btn-sm">Editar</button>
+                          <button class="btn btn-danger btn-sm">Excluir</button>
+                        </td>
+                      </tr>
+                    <?php endforeach; ?>
                   </tbody>
                 </table>
               </div>
@@ -244,4 +266,5 @@
     });
   </script>
 </body>
+
 </html>

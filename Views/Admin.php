@@ -1,11 +1,26 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sessão de Administração</title>
+  <?php
+  include("../DataBase/DatabaseConnection.php");
+  include("../Controller/DashboardData.php");
+  include("../Controller/InvoiceCRUD.php");
+  $conetionBd = new DatabaseConnection("localhost", "root", "", "SistemadeFatura");
+  $dashboardData = new DashboardData($conetionBd);
+  $totalInvoices = $dashboardData->getTotalInvoices();
+  $totalRevenue = $dashboardData->getTotalRevenue() ?? 0;
+  $totalCustomers = $dashboardData->getTotalCustomers();
+  $totalProductsSold = $dashboardData->getTotalProductsSold() ?? 0;
+  $invoiceCRUD = new InvoiceCRUD($conetionBd);
+  $invoices = $invoiceCRUD->getAllInvoices();
+  ?>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
   <!-- Barra de Navegação -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -19,8 +34,8 @@
           <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="Home.html">Home</a>
-          </li>
+          <a class="nav-link" href="Home.html">Home</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="Fatura.html">Faturas</a>
         </li>
@@ -31,12 +46,12 @@
           <a class="nav-link" href="CadastroProduto.html"> Cadastrar Produtos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="CadastroOperador.html">Cadastrar Operador</a>
-          </li>
+          <a class="nav-link" href="CadastroOperador.html">Cadastrar Operador</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="Relatório.html">Relatórios</a>
         </li>
-        
+
       </ul>
     </div>
   </nav>
@@ -49,7 +64,7 @@
         <div class="card text-white bg-primary mb-3">
           <div class="card-header">Faturas Emitidas</div>
           <div class="card-body">
-            <h5 class="card-title">150</h5>
+            <h5 class="card-title"><?php echo $totalInvoices; ?></h5>
             <p class="card-text">Total de faturas emitidas este mês.</p>
           </div>
         </div>
@@ -58,7 +73,7 @@
         <div class="card text-white bg-success mb-3">
           <div class="card-header">Receita</div>
           <div class="card-body">
-            <h5 class="card-title">Kzs 50.000,00</h5>
+            <h5 class="card-title">KZS <?php echo number_format($totalRevenue, 2, ',', '.'); ?></h5>
             <p class="card-text">Receita total deste mês.</p>
           </div>
         </div>
@@ -67,7 +82,7 @@
         <div class="card text-white bg-warning mb-3">
           <div class="card-header">Clientes</div>
           <div class="card-body">
-            <h5 class="card-title">75</h5>
+            <h5 class="card-title"><?php echo $totalCustomers; ?></h5>
             <p class="card-text">Novos clientes este mês.</p>
           </div>
         </div>
@@ -76,12 +91,15 @@
         <div class="card text-white bg-danger mb-3">
           <div class="card-header">Produtos Vendidos</div>
           <div class="card-body">
-            <h5 class="card-title">300</h5>
+            <h5 class="card-title"><?php echo $totalProductsSold; ?></h5>
             <p class="card-text">Total de produtos vendidos este mês.</p>
           </div>
         </div>
       </div>
     </div>
+
+
+
 
     <!-- Tabela de Faturas -->
     <div class="row">
@@ -103,19 +121,21 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>2024-06-18</td>
-                  <td>Suzeth Canda</td>
-                  <td>Kzs 1.000,00</td>
-                  <td><span class="badge badge-success">Pago</span></td>
-                  <td>
-                    <button class="btn btn-primary btn-sm">Ver</button>
-                    <button class="btn btn-warning btn-sm">Editar</button>
-                    <button class="btn btn-danger btn-sm">Excluir</button>
-                  </td>
-                </tr>
-                <!-- Adicione mais linhas conforme necessário -->
+                <?php foreach ($invoices as $invoice) : ?>
+                  <tr>
+                    <td><?php echo $invoice->getInvoiceId(); ?></td>
+                    <td><?php echo $invoice->getInvoiceDate(); ?></td>
+                    <td><?php echo "Cliente Exemplo"; // Substitua por lógica para obter o nome do cliente 
+                        ?></td>
+                    <td><?php echo number_format($invoice->getTotal(), 2, ',', '.'); ?></td>
+                    <td><span class="badge badge-success">Pago</span></td> <!-- Substitua por lógica de status real -->
+                    <td>
+                      <button class="btn btn-primary btn-sm">Ver</button>
+                      <button class="btn btn-warning btn-sm">Editar</button>
+                      <button class="btn btn-danger btn-sm">Excluir</button>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
               </tbody>
             </table>
           </div>
@@ -128,5 +148,5 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-</html>
 
+</html>

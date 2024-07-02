@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,23 +12,40 @@
     body {
       font-family: 'Arial', sans-serif;
     }
+
     .card-header h4 {
       margin-bottom: 0;
     }
   </style>
+
+  <?php
+  include("../DataBase/DatabaseConnection.php");
+  include("../Controller/DashboardData.php");
+  include("../Controller/InvoiceCRUD.php");
+  $conetionBd = new DatabaseConnection("localhost", "root", "", "SistemadeFatura");
+  $dashboardData = new DashboardData($conetionBd);
+  $totalInvoices = $dashboardData->getTotalInvoices();
+  $totalRevenue = $dashboardData->getTotalRevenue() ?? 0;
+  $totalCustomers = $dashboardData->getTotalCustomers();
+  $totalProductsSold = $dashboardData->getTotalProductsSold() ?? 0;
+  $invoiceCRUD = new InvoiceCRUD($conetionBd);
+  $invoices = $invoiceCRUD->getAllInvoices();
+  ?>
 </head>
+
 <body>
   <div class="container">
     <h1 class="mt-4">Relatório de Faturação</h1>
     <p class="lead">Relatório mensal de faturação para acompanhamento de desempenho.</p>
 
     <!-- Resumo dos Principais Indicadores -->
+
     <div class="row mb-4">
       <div class="col-md-3">
         <div class="card text-white bg-primary mb-3">
           <div class="card-header">Faturas Emitidas</div>
           <div class="card-body">
-            <h5 class="card-title">150</h5>
+            <h5 class="card-title"><?php echo $totalInvoices; ?></h5>
             <p class="card-text">Total de faturas emitidas este mês.</p>
           </div>
         </div>
@@ -36,7 +54,7 @@
         <div class="card text-white bg-success mb-3">
           <div class="card-header">Receita</div>
           <div class="card-body">
-            <h5 class="card-title">KZS 50.000,00</h5>
+            <h5 class="card-title">KZS <?php echo number_format($totalRevenue, 2, ',', '.'); ?></h5>
             <p class="card-text">Receita total deste mês.</p>
           </div>
         </div>
@@ -45,7 +63,7 @@
         <div class="card text-white bg-warning mb-3">
           <div class="card-header">Clientes</div>
           <div class="card-body">
-            <h5 class="card-title">75</h5>
+            <h5 class="card-title"><?php echo $totalCustomers; ?></h5>
             <p class="card-text">Novos clientes este mês.</p>
           </div>
         </div>
@@ -54,7 +72,7 @@
         <div class="card text-white bg-danger mb-3">
           <div class="card-header">Produtos Vendidos</div>
           <div class="card-body">
-            <h5 class="card-title">300</h5>
+            <h5 class="card-title"><?php echo $totalProductsSold; ?></h5>
             <p class="card-text">Total de produtos vendidos este mês.</p>
           </div>
         </div>
@@ -86,6 +104,7 @@
     </div>
 
     <!-- Tabela de Faturas -->
+
     <div class="card mb-4">
       <div class="card-header">
         <h4>Faturas Emitidas</h4>
@@ -103,31 +122,21 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>2024-06-01</td>
-              <td>João Silva</td>
-              <td>KZS 1.000,00</td>
-              <td><span class="badge badge-success">Pago</span></td>
-              <td>
-                <button class="btn btn-primary btn-sm">Ver</button>
-                <button class="btn btn-warning btn-sm">Editar</button>
-                <button class="btn btn-danger btn-sm">Excluir</button>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>2024-06-05</td>
-              <td>Maria Oliveira</td>
-              <td>KZS 2.500,00</td>
-              <td><span class="badge badge-warning">Pendente</span></td>
-              <td>
-                <button class="btn btn-primary btn-sm">Ver</button>
-                <button class="btn btn-warning btn-sm">Editar</button>
-                <button class="btn btn-danger btn-sm">Excluir</button>
-              </td>
-            </tr>
-            <!-- Adicione mais linhas conforme necessário -->
+            <?php foreach ($invoices as $invoice) : ?>
+              <tr>
+                <td><?php echo $invoice->getInvoiceId(); ?></td>
+                <td><?php echo $invoice->getInvoiceDate(); ?></td>
+                <td><?php echo "Cliente Exemplo"; // Substitua por lógica para obter o nome do cliente 
+                    ?></td>
+                <td><?php echo number_format($invoice->getTotal(), 2, ',', '.'); ?></td>
+                <td><span class="badge badge-success">Pago</span></td> <!-- Substitua por lógica de status real -->
+                <td>
+                  <button class="btn btn-primary btn-sm">Ver</button>
+                  <button class="btn btn-warning btn-sm">Editar</button>
+                  <button class="btn btn-danger btn-sm">Excluir</button>
+                </td>
+              </tr>
+            <?php endforeach; ?>
           </tbody>
         </table>
       </div>
@@ -200,4 +209,5 @@
     });
   </script>
 </body>
+
 </html>
