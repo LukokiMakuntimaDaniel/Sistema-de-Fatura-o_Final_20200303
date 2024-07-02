@@ -1,3 +1,4 @@
+drop database SistemadeFatura;
 create database SistemadeFatura;
 use SistemadeFatura;
 
@@ -16,6 +17,7 @@ customerId int not null primary key auto_increment,
 address varchar(50) not null,
 city  varchar(50) not null,
 phoneNumber varchar(50) not null,
+dateCustomer date not null,
 email  varchar(50) not null
 );
 
@@ -52,9 +54,10 @@ email  varchar(50) not null
 
 create table invoices(
 invoiceId int not null primary key auto_increment,
+orderInvoice varchar(50) not null,
 productId int not null,
 amount int not null,
 total float not null,
-invoceDate date not null,
+invoiceDate date not null,
 foreign key(productId) references products(productId)
 )
