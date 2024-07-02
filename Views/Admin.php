@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (!isset($_SESSION['user'])) {
-   header('Location:../index.php');
-}// Faça algo diferente aqui, se necessário
+  header('Location:../index.php');
+} // Faça algo diferente aqui, se necessário
 ?>
 
 <!DOCTYPE html>
@@ -57,6 +57,11 @@ if (!isset($_SESSION['user'])) {
         </li>
         <li class="nav-item">
           <a class="nav-link" href="./Relatório.php">Relatórios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="../Controller/terminarSessao.php">
+            <i class=""></i> Iniciar Sessão
+          </a>
         </li>
 
       </ul>

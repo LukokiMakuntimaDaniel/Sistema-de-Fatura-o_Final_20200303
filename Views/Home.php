@@ -87,8 +87,8 @@ if (!isset($_SESSION['user'])) {
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="Login.html">
-                <i class="fas fa-chart-bar"></i> Iniciar Sessão
+              <a class="nav-link" href="../Controller/terminarSessao.php">
+                <i class=""></i> Iniciar Sessão
               </a>
             </li>
           </ul>

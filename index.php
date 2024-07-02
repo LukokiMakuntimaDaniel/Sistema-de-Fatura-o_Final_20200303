@@ -1,3 +1,29 @@
+<?php
+session_start();
+include("DataBase/DatabaseConnection.php");
+include("Controller/Login.php");
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $userEmail = $_POST['email'];
+  $password = $_POST['password'];
+
+  $conetionBd = new DatabaseConnection("localhost", "root", "", "SistemadeFatura");
+  $userLogin = new Login($conetionBd);
+
+  $user = $userLogin->authenticate($userEmail, $password);
+
+  if ($user) {
+    $_SESSION['user'] = $user;
+    if ($user->getUserType() === 'admin') {
+      header("Location: ./Views/Admin.php"); // Redireciona para o dashboard do administrador
+    } elseif ($user->getUserType() == 2) {
+      header("Location: ./Views/Operador.php"); // Redireciona para o dashboard do usuário
+    }
+  } else {
+    $error = "Nome de usuário ou senha inválidos.";
+  }
+}
+?>
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -33,32 +59,7 @@
     }
   </style>
 
-  <?php
-  session_start();
-  include("DataBase/DatabaseConnection.php");
-  include("Controller/Login.php");
 
-  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $userEmail = $_POST['email'];
-    $password = $_POST['password'];
-
-    $conetionBd = new DatabaseConnection("localhost", "root", "", "SistemadeFatura");
-    $userLogin = new Login($conetionBd);
-
-    $user = $userLogin->authenticate($userEmail, $password);
-
-    if ($user) {
-      $_SESSION['user'] = $user;
-      if ($user->getUserType() === 'admin') {
-        header("Location: ./Views/Admin.php"); // Redireciona para o dashboard do administrador
-      } elseif ($user->getUserType() == 2) {
-        header("Location: ./Views/Operador.php"); // Redireciona para o dashboard do usuário
-      }
-    } else {
-      $error = "Nome de usuário ou senha inválidos.";
-    }
-  }
-  ?>
 </head>
 
 <body>
