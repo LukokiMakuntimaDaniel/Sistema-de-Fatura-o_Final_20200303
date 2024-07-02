@@ -85,10 +85,10 @@ if (!isset($_SESSION['user'])) {
 
         <div class="row mt-4">
           <div class="col-md-6">
-            <h5>Data da Fatura: 2024-06-18</h5>
+            <h5 id="dataFactura"> </h5>
           </div>
           <div class="col-md-6 text-right">
-            <h5>Fatura #: 0001</h5>
+            <h5 id="numeroFactura">Fatura</h5>
           </div>
         </div>
 
@@ -106,15 +106,15 @@ if (!isset($_SESSION['user'])) {
               <tbody>
                 <tr>
                   <th>Subtotal:</th>
-                  <td>R$ 00</td>
+                  <td id="Subtotal"></td>
                 </tr>
                 <tr>
-                  <th>Imposto (10%):</th>
-                  <td>R$ 14,00</td>
+                  <th>Imposto (14%):</th>
+                  <td id="iva"></td>
                 </tr>
                 <tr>
                   <th>Total:</th>
-                  <td><strong>R$ 1.265,00</strong></td>
+                  <td id="total"><strong></strong></td>
                 </tr>
               </tbody>
             </table>

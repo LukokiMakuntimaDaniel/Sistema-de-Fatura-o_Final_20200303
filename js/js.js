@@ -91,6 +91,12 @@ function criarTabelaProdutos() {
     tabela.className = 'table table-bordered';
     let thead = document.createElement('thead');
     let tbody = document.createElement('tbody');
+    Subtotal=0;
+    comIva=0;
+    total=0;
+    let currentDate = new Date();
+    let invoiceDate = currentDate.toISOString().split('T')[0]; 
+    document.getElementById("dataFactura").innerHTML="Data da Fatura: "+invoiceDate;
 
     // Cabeçalho da tabela
     let cabecalho = '<tr>' +
@@ -107,17 +113,26 @@ function criarTabelaProdutos() {
     // Verifica se há dados no localStorage para produtos atualizados
     let produtosAtualizados = JSON.parse(localStorage.getItem('produtosAtualizado'));
 
+    
+
     produtosAtualizados.forEach(function (produto, index) {
+        document.getElementById("numeroFactura").innerHTML="Fatura N " +produto.orderInvoice
+        Subtotal+=produto.qtdComprada * parseFloat(produto.prince);
         let linha = document.createElement('tr');
         linha.innerHTML = '<td>' + (index + 1) + '</td>' +
             '<td>' + produto.productName + '</td>' +
             '<td>' + produto.qtdComprada + '</td>' +
-            '<td>R$ ' + parseFloat(produto.prince).toFixed(2) + '</td>' +
-            '<td>R$ ' + (produto.qtdComprada * parseFloat(produto.prince)).toFixed(2) + '</td>';
+            '<td>kz ' + parseFloat(produto.prince).toFixed(2) + '</td>' +
+            '<td>kz ' + (produto.qtdComprada * parseFloat(produto.prince)).toFixed(2) + '</td>';
         tbody.appendChild(linha);
     });
+    comIva = Subtotal*(0.14);
+    total= (Subtotal+comIva).toFixed(2)
 
     tabela.appendChild(tbody);
+    document.getElementById("Subtotal").innerHTML= "Kzs "+Subtotal;
+    document.getElementById("iva").innerHTML= "Kzs "+comIva;
+    document.getElementById("total").innerHTML= "Kzs "+total;
 
     // Adicionar a tabela ao elemento com id "tabelaProdutos" (substitua pelo seu id real)
     let tabelaContainer = document.getElementById('tabelaProdutos');
